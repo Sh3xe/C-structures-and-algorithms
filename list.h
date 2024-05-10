@@ -28,7 +28,7 @@ bool lst_create( lst_t *list, uint32_t initial_size );
 void lst_destroy( lst_t *list );
 
 /**
- * @brief returns the elements at index index in list. Will assert false if the list is empty, you should alwase call lst_empty to check if the list is empty
+ * @brief returns the element at index [index]. This function does not check the index.
  * 
  * @param list the list...
  * @param index the index...
@@ -46,8 +46,54 @@ int lst_nth( lst_t *list, uint32_t index );
  */
 bool lst_push_back( lst_t *list, int element );
 
+/**
+ * @brief removes an item at the begining of a list. Will assert(false) if the list is empty, you should alwase call lst_empty to verify this condition
+ * 
+ * @param list 
+ * @return the item at the begining of the list
+ */
 int lst_pop_back( lst_t *list );
+
+/**
+ * @brief add element at the beginning of list
+ * 
+ * @param list 
+ * @param element 
+ * @return true for success
+ * @return false for memory errors
+ */
 bool lst_push_front( lst_t *list, int element );
+
+/**
+ * @brief removes an item at the end of a list. Will assert(false) if the list is empty, you should alwase call lst_empty to verify this condition
+ * 
+ * @param list 
+ * @return the item at the end of the list
+ */
 int lst_pop_front( lst_t *list );
-int lst_copy( lst_t *in, lst_t *out );
+
+/**
+ * @brief copies in in out
+ * 
+ * @param in 
+ * @param out 
+ * @return true for success
+ * @return false in case of memory errors
+ */
+bool lst_copy( lst_t *in, lst_t *out );
+
+/**
+ * @brief Check wether list is empty
+ * 
+ * @param list 
+ * @return bool
+ */
+bool lst_empty(lst_t *list);
+
+/**
+ * @brief returns the size of the list
+ * 
+ * @param list 
+ * @return uint32_t 
+ */
 uint32_t lst_size( lst_t *list );

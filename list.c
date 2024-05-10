@@ -116,7 +116,23 @@ uint32_t lst_size( lst_t *list )
 	return list->current_size;
 }
 
-int lst_copy( lst_t *in, lst_t *out )
+bool lst_copy( lst_t *in, lst_t *out )
 {
-	
+	out->begin_id = 0;
+	out->current_size = in->current_size;
+	out->allocated_size = out->current_size;
+	out->elements = (int*)malloc( sizeof(int) * in->current_size );
+
+	if(out->elements == NULL)
+		return false;
+
+	for(uint32_t i = 0; i < in->current_size; ++i)
+		out->elements[i] = lst_nth(in, i);
+
+	return true;
+}
+
+bool lst_empty(lst_t *list)
+{
+	return lst_size(list) == 0;
 }
