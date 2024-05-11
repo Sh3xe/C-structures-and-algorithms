@@ -1,4 +1,5 @@
 #include "list.h"
+#include "hash_table.h"
 #include <stdio.h>
 
 void lst_print( lst_t *list )
@@ -12,24 +13,27 @@ void lst_print( lst_t *list )
 
 int main()
 {
-	lst_t list;
-	lst_create(&list, 4);
+	ht_t al;
+	ht_create(&al, 8);
 
-	for(int i = 0; i < 5; ++i)
-	{
-		lst_push_back(&list, 2*i);
-		lst_push_front(&list, -i);
-	}
+	ht_push(&al, "arnaud", 21);
+	ht_push(&al, "pierre", 22);
 
-	lst_print(&list);
+	int a = 0, b = 0, c = 0, d = 0, e = 0;
+	bool got_a = ht_get(&al, "arnaud", &a);
+	bool got_b = ht_get(&al, "arnauaad", &b);
+	bool got_c = ht_get(&al, "pierre", &c);
 
-	for(int i = 0; i < 3; ++i)
-	{
-		lst_pop_front(&list);
-	}
+	ht_remove(&al, "pierre");
 
-	lst_print(&list);
+	bool got_d = ht_get(&al, "pierre", &d);
 
-	lst_destroy(&list);
+
+	printf("a: %d %d\n", a, got_a);
+	printf("b: %d %d\n", b, got_b);
+	printf("c: %d %d\n", c, got_c);
+	printf("d: %d %d\n", d, got_d);
+
+	ht_destroy(&al);
 	return 0;
 }

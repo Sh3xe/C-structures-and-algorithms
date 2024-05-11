@@ -2,6 +2,20 @@
 #include <stdlib.h>
 #include <string.h>
 
+static uint32_t hash_string(const char *str)
+{
+	uint32_t value = 0;
+	uint32_t multiplier = 1;
+
+	for(size_t i = 0; str[i] != '\0'; ++i)
+	{
+		value += multiplier * (uint32_t)str[i];
+		multiplier *= 256;
+	}
+
+	return value;
+}
+
 void al_create(al_t *list)
 {
 	list->begin_node = NULL;
@@ -44,7 +58,7 @@ bool al_push(al_t *list, const char *key, int value)
 	new_node->value = value;
 	new_node->key = malloc( (strlen(key)+1)*sizeof(char) );
 	if(new_node->key == NULL) return false;
-	strcpy(&new_node->key, key);
+	strcpy(new_node->key, key);
 	new_node->next = NULL;
 
 	// we pushed the first item of the list
@@ -100,27 +114,45 @@ bool al_get(al_t *list, const char *key, int *value)
 	return false;
 }
 
-bool ht_create(ht_t *list, uint32_t default_size)
+bool ht_create(ht_t *ht, uint32_t default_size)
 {
+	ht->size = default_size;
+	ht->data = malloc(ht->size * sizeof(al_t));
 
+	if(ht->data == NULL) return false;
+
+	for(size_t i = 0; i < ht->size; ++i)
+	{
+		al_create(&ht->data[i]);
+	}
+
+	return true;
 }
 
-void ht_destroy(ht_t *list)
+void ht_destroy(ht_t *ht)
 {
+	for(size_t i = 0; i < ht->size; ++i)
+	{
+		al_destroy(&ht->data[i]);
+	}
 
+	free(ht->data);
 }
 
-bool ht_push(ht_t *list, const char *key, int value)
+bool ht_push(ht_t *ht, const char *key, int value)
 {
-
+	size_t index = hash_string(key) % ht->size;
+	return al_push(&ht->data[index], key, value);
 }
 
-void ht_remove(ht_t *list, const char *key)
+void ht_remove(ht_t *ht, const char *key)
 {
-
+	size_t index = hash_string(key) % ht->size;
+	al_remove(&ht->data[index], key);
 }
 
-bool ht_get(ht_t *list, const char *key, int *value)
+bool ht_get(ht_t *ht, const char *key, int *out_value)
 {
-
+	size_t index = hash_string(key) % ht->size;
+	return al_get(&ht->data[index], key, out_value);
 }
